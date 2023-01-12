@@ -1,0 +1,179 @@
+:root {
+    --text-color: rgba(255, 255, 255, 0.87);
+    --text-medium-color: rgba(255, 255, 255, 0.6);
+    --background-color: #121212;
+    --background-e1: rgba(255, 255, 255, 0.07);
+}
+
+html, body, #app { height: 100%; margin: 0; padding: 0; }
+
+body {
+    background-color: var(--background-color);
+    overscroll-behavior-y: contain;
+    user-select: none;
+}
+
+.table {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.game {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: 1rem solid gray;
+    box-sizing: border-box;
+    flex-grow: 1;
+}
+
+.game-box {
+    display: flex;
+    flex-grow: 1;
+}
+
+.tray {
+    width: 3rem;
+    flex-shrink: 0;
+    background-color: silver;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    outline: none;
+}
+
+.tray-checkers {
+    flex-grow: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tray-checkers-up {
+    justify-content: flex-end;
+}
+
+.tray-label {
+    writing-mode: vertical-rl;
+}
+
+.status-bar {
+    display: flex;
+    gap: 3rem;
+    padding: 1rem;
+    color: var(--text-color);
+}
+
+.status-bar .checker {
+    display: inline-block;
+    width: 1rem;
+}
+
+.active-player-info {
+    display: flex;
+    align-items: center;
+}
+
+.game-line {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    gap: 0.2rem;
+}
+
+.bar {
+    background-color: grey;
+    height: 100%;
+    width: 2rem;
+    flex-shrink: 0;
+}
+
+.center-bar {
+    height: 6rem;
+    width: 2rem;
+    background-color: grey;
+    align-self: center;
+}
+
+.point {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    outline: none;
+}
+
+.point--selected .point-img {
+    stroke: lime;
+}
+
+.point-img {
+    fill: red;
+}
+
+.checkers {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.bar-checkers {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bar-checkers-up {
+    justify-content: flex-end;
+}
+
+.game-line:first-child .checkers {
+    justify-content: flex-start;
+}
+
+.checker {
+    aspect-ratio: 1;
+    width: 40%;
+    border-radius: 100%;
+    flex-grow: 0;
+}
+.checker-p1 {
+    background-color: yellow;
+}
+.checker-p2 {
+    background-color: orange;
+}
+
+.rolls {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    position: absolute;
+    top: calc(50% - 1rem);
+}
+
+.die {
+    width: 2rem;
+    height: 2rem;
+    background-color: var(--background-e1);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

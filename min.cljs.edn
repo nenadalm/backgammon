@@ -1,0 +1,12 @@
+^{:open-url false}
+{:main app.core
+ :output-to "resources/public/js/app.js"
+ :output-dir "resources/public/js/compiled/app"
+ :asset-path "/js/compiled/app"
+ :optimizations :advanced
+ :pretty-print false
+ :source-map "resources/public/js/app.js.map"
+ :install-deps false
+ :npm-deps false
+ :source-map-timestamp true
+ :closure-defines {goog.DEBUG false}}
