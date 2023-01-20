@@ -23,3 +23,5 @@ all: resources/public/worker.js
 test:
 	clojure -M:cljfmt check
 	clojure -M:clj-kondo
+	clojure -M -m figwheel.main -t nodejs -c app.run-tests
+	node target/node/main.js

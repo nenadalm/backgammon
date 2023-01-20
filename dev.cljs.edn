@@ -1,7 +1,8 @@
 ^{:open-url false
-  :watch-dirs ["src"]
+  :watch-dirs ["src" "test"]
   :css-dirs ["resources/public/css"]
-  :ring-server-options {:port 9501 :host "0.0.0.0"}}
+  :ring-server-options {:port 9501 :host "0.0.0.0"}
+  :auto-testing true}
 {:main app.core
  :output-to "resources/public/js/app.js"
  :output-dir "resources/public/js/compiled/app"
