@@ -37,7 +37,7 @@ body {
 
 .tray {
     width: 3rem;
-    flex-shrink: 1;
+    flex-shrink: 0;
     background-color: silver;
     display: flex;
     flex-direction: column;
@@ -66,8 +66,9 @@ body {
 .status-bar {
     display: flex;
     gap: 3rem;
-    padding: 1rem;
+    padding: 0.5rem;
     color: var(--text-color);
+    writing-mode: vertical-rl;
 }
 
 .status-bar .checker {

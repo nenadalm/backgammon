@@ -92,6 +92,7 @@
 (defn- game []
   [:div.table
    [:div.game-box
+    [status-bar]
     [:div.game
      [:div.game-line
       (for [n (range 13 19)]
@@ -113,9 +114,7 @@
         ^{:key n} [point {:direction :up
                           :point n}])]
      [dice]]
-    [tray]]
-
-   [status-bar]])
+    [tray]]])
 
 (defn app []
   [game])
