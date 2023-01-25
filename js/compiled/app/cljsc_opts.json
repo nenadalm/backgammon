@@ -1,0 +1,1 @@
+{"output-dir":"resources\/public\/js\/compiled\/app","closure-defines":{"goog.DEBUG":false},"install-deps":false,"optimizations":"advanced","aot-cache":false,"output-to":"resources\/public\/js\/app.js","source-map-timestamp":true,"asset-path":"\/js\/compiled\/app","source-map":"resources\/public\/js\/app.js.map","main":"app.core","pretty-print":false,"npm-deps":false}
