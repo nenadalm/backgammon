@@ -260,7 +260,7 @@
  (fn [db _]
    (let [game (:game db)
          {:keys [selected-point active-player available-moves]} game
-         highest-available-move (first (rseq (sort available-moves)))
+         highest-available-move (first (rseq (vec (sort available-moves))))
          target-point (+ selected-point (cond-> highest-available-move
                                           (= active-player :p1) (* -1)))
          occupied-points (occupied-points game)
