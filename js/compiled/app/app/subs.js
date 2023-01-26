@@ -30,3 +30,9 @@ var _ = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__14164,(0),null);
 var player = cljs.core.nth.cljs$core$IFn$_invoke$arity$3(vec__14164,(1),null);
 return cljs.core.get_in.cljs$core$IFn$_invoke$arity$2(db,new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [cljs.core.cst$kw$game,cljs.core.cst$kw$bear_DASH_off,player], null));
 })], 0));
+re_frame.core.reg_sub.cljs$core$IFn$_invoke$arity$variadic(cljs.core.cst$kw$app$subs_SLASH_page,cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([(function (db,_){
+return cljs.core.cst$kw$page.cljs$core$IFn$_invoke$arity$1(db);
+})], 0));
+re_frame.core.reg_sub.cljs$core$IFn$_invoke$arity$variadic(cljs.core.cst$kw$app$subs_SLASH_app_DASH_info,cljs.core.prim_seq.cljs$core$IFn$_invoke$arity$2([(function (db,_){
+return cljs.core.cst$kw$app_DASH_info.cljs$core$IFn$_invoke$arity$1(db);
+})], 0));

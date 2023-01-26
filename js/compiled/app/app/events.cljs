@@ -169,30 +169,37 @@
       entering-selected-point))
 
 (defn- reset-game [db]
-  (assoc db :game (-> {:active-player :p1
-                       ;; :selected-point 0
-                       ;; :rolls [3 5]
-                       ;; :available-moves [3 5]
-                       ;; :used-moves []
-                       :bar {:p1 []
-                             :p2 []}
-                       :bear-off {:p1 []
-                                  :p2 []}
-                       :point->checkers {1 [:p2 :p2]
-                                         12 [:p2 :p2 :p2 :p2 :p2]
-                                         17 [:p2 :p2 :p2]
-                                         19 [:p2 :p2 :p2 :p2 :p2]
-                                         6 [:p1 :p1 :p1 :p1 :p1]
-                                         8 [:p1 :p1 :p1]
-                                         13 [:p1 :p1 :p1 :p1 :p1]
-                                         24 [:p1 :p1]}}
-                      roll)))
+  (assoc db
+         :game (-> {:active-player :p1
+                    ;; :selected-point 0
+                    ;; :rolls [3 5]
+                    ;; :available-moves [3 5]
+                    ;; :used-moves []
+                    :bar {:p1 []
+                          :p2 []}
+                    :bear-off {:p1 []
+                               :p2 []}
+                    :point->checkers {1 [:p2 :p2]
+                                      12 [:p2 :p2 :p2 :p2 :p2]
+                                      17 [:p2 :p2 :p2]
+                                      19 [:p2 :p2 :p2 :p2 :p2]
+                                      6 [:p1 :p1 :p1 :p1 :p1]
+                                      8 [:p1 :p1 :p1]
+                                      13 [:p1 :p1 :p1 :p1 :p1]
+                                      24 [:p1 :p1]}}
+                   roll)
+         :page :game))
 
 (re-frame/reg-event-fx
  ::init
  [(re-frame/inject-cofx :app-version)]
  (fn [{:keys [app-version]} _]
    {:db (reset-game {:app-info {:version app-version}})}))
+
+(re-frame/reg-event-db
+ ::reset
+ (fn [db _]
+   (reset-game db)))
 
 (def ^:private conjv (fnil conj []))
 
@@ -298,3 +305,8 @@
                 (use-move highest-available-move)))
            db))
        db))))
+
+(re-frame/reg-event-db
+ ::open-page
+ (fn [db [_ page]]
+   (assoc db :page page)))
