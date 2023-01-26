@@ -4,7 +4,8 @@
    [clojure.string :as str]
    [re-frame.core :as re-frame]
    [app.events :as events]
-   [app.subs :as subs]))
+   [app.subs :as subs]
+   [app.components.icons.views :as i]))
 
 (defn- point-up-img []
   [:svg.point-img
@@ -103,7 +104,10 @@
       (for [n (range 19 25)]
         ^{:key n} [point {:direction :down
                           :point n}])]
-     [:div.center-bar]
+     [:div.center-bar
+      [:button.menu-button
+       {:on-click (fn [_] (re-frame/dispatch [::events/open-page :menu]))}
+       "M\ne\nn\nu"]]
      [:div.game-line
       (for [n (reverse (range 7 13))]
         ^{:key n} [point {:direction :up
@@ -116,5 +120,25 @@
      [dice]]
     [tray]]])
 
+(defn menu []
+  (let [app-info @(re-frame/subscribe [::subs/app-info])]
+    [:div.menu
+     [:div.menu--header
+      [:button.close
+       {:on-click (fn [_] (re-frame/dispatch [::events/open-page :game]))}
+       [i/close]]]
+     [:button.action
+      {:on-click (fn [_] (re-frame/dispatch [::events/reset]))}
+      "Reset game"]
+     [:div.menu--footer
+      [:div.issue-link
+       [:a
+        {:href "https://github.com/nenadalm/backgammon/issues"}
+        "Report issue / request feature"]]
+      [:div.app-version
+       (str "Version: " (:version app-info))]]]))
+
 (defn app []
-  [game])
+  (case @(re-frame/subscribe [::subs/page])
+    :menu [menu]
+    :game [game]))

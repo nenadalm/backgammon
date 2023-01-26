@@ -35,3 +35,13 @@
  ::tray
  (fn [db [_ player]]
    (get-in db [:game :bear-off player])))
+
+(re-frame/reg-sub
+ ::page
+ (fn [db _]
+   (:page db)))
+
+(re-frame/reg-sub
+ ::app-info
+ (fn [db _]
+   (:app-info db)))
