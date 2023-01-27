@@ -4,3 +4,6 @@
 
 (defn close []
   [:span (gstring/unescapeEntities "&#10799;")])
+
+(defn crown []
+  [:span "👑"])

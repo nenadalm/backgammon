@@ -50,6 +50,14 @@
      [die roll1]
      [die roll2]]))
 
+(defn winner []
+  (when-let [winner @(re-frame/subscribe [::subs/winner])]
+    [:div.winner
+     {:style (if (= :p1 winner)
+               {:right "calc(25% - 5rem)"}
+               {:left "calc(25% - 5rem)" :transform "rotate(180deg)"})}
+     [i/crown]]))
+
 (defn- status-bar []
   (let [{:keys [active-player available-moves]} @(re-frame/subscribe [::subs/status-bar])]
     [:div.status-bar
@@ -117,7 +125,8 @@
       (for [n (reverse (range 1 7))]
         ^{:key n} [point {:direction :up
                           :point n}])]
-     [dice]]
+     [dice]
+     [winner]]
     [tray]]])
 
 (defn menu []
@@ -131,6 +140,10 @@
       {:on-click (fn [_] (re-frame/dispatch [::events/reset]))}
       "Reset game"]
      [:div.menu--footer
+      [:div.rules-link
+       [:a
+        {:href "https://www.bkgm.com/rules.html"}
+        "Rules"]]
       [:div.issue-link
        [:a
         {:href "https://github.com/nenadalm/backgammon/issues"}
