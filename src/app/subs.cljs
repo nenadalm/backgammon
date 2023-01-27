@@ -1,5 +1,6 @@
 (ns app.subs
   (:require
+   [clojure.set :as set]
    [re-frame.core :as re-frame]))
 
 (re-frame/reg-sub
@@ -45,3 +46,24 @@
  ::app-info
  (fn [db _]
    (:app-info db)))
+
+(defn- winner [game]
+  (let [{:keys [bar point->checkers]} game
+        remaining-players (set/union
+                           (into
+                            #{}
+                            (mapcat val)
+                            bar)
+                           (into
+                            #{}
+                            (mapcat val)
+                            point->checkers))]
+    (when (< (count remaining-players) 2)
+      (case (first remaining-players)
+        :p1 :p2
+        :p2 :p2))))
+
+(re-frame/reg-sub
+ ::winner
+ (fn [db _]
+   (winner (:game db))))

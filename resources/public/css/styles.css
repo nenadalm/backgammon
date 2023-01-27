@@ -172,6 +172,14 @@ body {
     top: calc(50% - 1rem);
 }
 
+.winner {
+    font-size: 2rem;
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    top: calc(50% - 1rem);
+}
+
 .die {
     width: 2rem;
     height: 2rem;
@@ -187,7 +195,7 @@ a {
     color: var(--text-medium-color);
 }
 
-.issue-link {
+.issue-link, .rules-link {
     text-align: center;
     margin-bottom: 1rem;
 }
