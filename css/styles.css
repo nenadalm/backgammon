@@ -124,8 +124,8 @@ body {
     fill: red;
 }
 
-.game-line1 .point:nth-child(even) .point-img,
-.game-line2 .point:nth-child(odd) .point-img{
+.game-line1 .point:nth-of-type(even) .point-img,
+.game-line2 .point:nth-of-type(odd) .point-img{
     fill: darksalmon;
 }
 
