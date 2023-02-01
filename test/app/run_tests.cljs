@@ -2,7 +2,8 @@
   (:require
    [cljs.test :refer [run-all-tests]]
    [pjstadig.humane-test-output]
-   [app.events-test]))
+   [app.events-test]
+   [app.db-test]))
 
 (defmethod cljs.test/report [:cljs.test/default :end-run-tests] [m]
   (when-not (cljs.test/successful? m)

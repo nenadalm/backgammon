@@ -3,12 +3,6 @@
    [clojure.test :refer [deftest is testing]]
    [app.events :as events]))
 
-(deftest game-end?-test
-  (is (false? (events/game-end? {:bar {:p1 [:p1 :p1]}
-                                 :point->checkers {23 [:p2 :p2]}})))
-  (is (true? (events/game-end? {:bar {:p1 [] :p2 []}
-                                :point->checkers {23 [:p2 :p2]}}))))
-
 (deftest use-move-test
   (is (= {:used-moves [1]
           :available-moves [2 3]
