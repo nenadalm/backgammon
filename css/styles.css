@@ -124,6 +124,11 @@ body {
     fill: red;
 }
 
+.game-line1 .point:nth-child(even) .point-img,
+.game-line2 .point:nth-child(odd) .point-img{
+    fill: darksalmon;
+}
+
 .checkers {
     position: absolute;
     top: 0;

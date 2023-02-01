@@ -1,19 +1,10 @@
 (ns app.events
   (:require
    [clojure.set :as set]
-   [re-frame.core :as re-frame]))
+   [re-frame.core :as re-frame]
+   [app.db :as db]))
 
 (def ^:private conjv (fnil conj []))
-
-(defn- pop-selected-point [game]
-  (let [selected-point (:selected-point game)]
-    (case selected-point
-      0 (update-in game [:bar :p2] pop)
-      25 (update-in game [:bar :p1] pop)
-      (let [checkers (get-in game [:point->checkers selected-point])]
-        (if (== 1 (count checkers))
-          (update game :point->checkers dissoc selected-point)
-          (assoc-in game [:point->checkers selected-point] (pop checkers)))))))
 
 (re-frame/reg-cofx
  :app-version
@@ -25,19 +16,6 @@
                       (.getAttribute "content"))
               "unknown"))))
 
-(defn- roll-die []
-  (inc (rand-int 6)))
-
-(defn- roll [game]
-  (let [roll1 (roll-die)
-        roll2 (roll-die)]
-    (assoc game
-           :used-moves []
-           :rolls [roll1 roll2]
-           :available-moves (if (== roll1 roll2)
-                              [roll1 roll2 roll1 roll2]
-                              [roll1 roll2]))))
-
 (def ^:private opponent
   {:p1 :p2
    :p2 :p1})
@@ -46,7 +24,7 @@
   (let [{:keys [active-player bar]} game
         hitted (get bar active-player)]
     (if (seq hitted)
-      (assoc game :selected-point (if (= active-player :p1) 25 0))
+      (assoc game :selected-point (db/bar-point active-player))
       game)))
 
 (defn- blocked-points [game]
@@ -71,56 +49,25 @@
 (defn- occupied-points [game]
   (let [{:keys [point->checkers active-player]} game]
     (into
-     {}
+     #{}
      (comp
       (filter
        (fn [[_ checkers]]
          (= active-player (first checkers))))
-      (map (fn [[point checkers]]
-             [point (count checkers)])))
+      (map key))
      point->checkers)))
 
 (defn- bear-off-active? [game]
-  (let [{:keys [point->checkers active-player bar]} game
-        points-presence (into
-                         []
-                         (comp
-                          (filter
-                           (fn [[_ checkers]]
-                             (= active-player (first checkers))))
-                          (map key))
-                         point->checkers)
+  (let [{:keys [active-player bar]} game
         home-range? (case active-player
                       :p1 #(<= 1 % 6)
                       :p2 #(<= 19 % 24))
         bar-checkers (get bar active-player)]
     (and
      (empty? bar-checkers)
-     (every? home-range? points-presence))))
+     (every? home-range? (occupied-points game)))))
 
 (def ^:private compare' #(compare %2 %1))
-
-(defn- legal-move? [game move]
-  (let [{:keys [active-player bar]} game
-        available-points (available-points game)
-        bar-cnt (count (get bar active-player))
-        bar-point (if (= active-player :p1) 25 0)
-        occupied-points (if (< 0 bar-cnt)
-                          {bar-point bar-cnt}
-                          (occupied-points game))
-        bear-off-active (bear-off-active? game)]
-    (boolean
-     (let [move-by (if (= active-player :p1) (* -1 move) move)]
-       (some
-        (fn [occupied-point]
-          (let [target-point (+ occupied-point move-by)]
-            (or
-             (available-points target-point)
-             (and bear-off-active
-                  (case active-player
-                    :p1 (= target-point 0)
-                    :p2 (= 25 target-point))))))
-        (keys occupied-points))))))
 
 (defn- use-move* [game move-by]
   (-> game
@@ -130,125 +77,139 @@
                                    (into (subvec moves 0 idx)
                                          (subvec moves (inc idx))))))))
 
-(defn has-valid-move? [game]
+(defn- legal-move? [game move]
+  (let [{:keys [active-player bar]} game
+        available-points (available-points game)
+        bar-cnt (count (get bar active-player))
+        bar-point (db/bar-point active-player)
+        occupied-points (if (< 0 bar-cnt)
+                          [bar-point]
+                          (occupied-points game))
+        bear-off-active (bear-off-active? game)]
+    (boolean
+     (let [move-by (* move (db/move-direction active-player))]
+       (some
+        (fn [occupied-point]
+          (let [target-point (+ occupied-point move-by)]
+            (or
+             (available-points target-point)
+             (and bear-off-active
+                  (= target-point (db/bear-off-point active-player))))))
+        occupied-points)))))
+
+(defn- has-legal-move? [game]
+  (let [{:keys [available-moves]} game]
+    (some (partial legal-move? game) available-moves)))
+
+(defn- can-bear-off?
+  "Doesn't check for legal move."
+  [game]
   (let [{:keys [available-moves active-player bar]} game
         bar-cnt (count (get bar active-player))
-        bar-point (if (= active-player :p1) 25 0)
+        bar-point (db/bar-point active-player)
         occupied-points (if (< 0 bar-cnt)
-                          {bar-point bar-cnt}
+                          [bar-point]
                           (occupied-points game))
         highest-occupied-point (first (sort (if (= active-player :p1)
                                               compare'
-                                              compare) (keys occupied-points)))
+                                              compare) occupied-points))
         bear-off-active (bear-off-active? game)]
     (boolean
-     (or
-      (some (partial legal-move? game) available-moves)
-      (and bear-off-active
-           (some
-            (fn [move]
-              (let [move-by (if (= active-player :p1) (* -1 move) move)]
-                (some
-                 (fn [occupied-point]
-                   (let [target-point (+ occupied-point move-by)]
-                     (and (= highest-occupied-point occupied-point)
-                          (case active-player
-                            :p1 (< target-point 0)
-                            :p2 (< 25 target-point)))))
-                 (keys occupied-points))))
-            available-moves))))))
+     (and bear-off-active
+          (some
+           (fn [move]
+             (let [move-by (* move (db/move-direction active-player))]
+               (some
+                (fn [occupied-point]
+                  (let [target-point (+ occupied-point move-by)]
+                    (and (= highest-occupied-point occupied-point)
+                         (not (<= 0 target-point 25)))))
+                occupied-points)))
+           available-moves)))))
+
+(defn has-valid-move? [game]
+  (or
+   (has-legal-move? game)
+   (can-bear-off? game)))
+
+(defn- make-move [game move occupied-point target-point]
+  (let [{:keys [point->checkers active-player]} game
+        opponent-player (opponent active-player)
+        existing-checkers (point->checkers target-point)
+        game (assoc game :selected-point occupied-point)]
+    (cond
+      (or
+       (not (seq existing-checkers))
+       (= active-player (first existing-checkers)))
+      (-> game
+          (update-in [:point->checkers target-point] conjv active-player)
+          db/pop-selected-point
+          (dissoc :selected-point)
+          (use-move* move))
+
+      (= 1 (count existing-checkers))
+      (-> game
+          (assoc-in [:point->checkers target-point] [active-player])
+          db/pop-selected-point
+          (dissoc :selected-point)
+          (update-in [:bar opponent-player] conjv opponent-player)
+          (use-move* move))
+
+      :else game)))
 
 (defn has-valid-move2? [game]
-  (let [{:keys [active-player bar available-moves point->checkers]} game
-        opponent-player (opponent active-player)
+  (let [{:keys [active-player bar available-moves]} game
         available-points (available-points game)
         bar-cnt (count (get bar active-player))
-        bar-point (if (= active-player :p1) 25 0)
+        bar-point (db/bar-point active-player)
         occupied-points (if (< 0 bar-cnt)
-                          {bar-point bar-cnt}
+                          [bar-point]
                           (occupied-points game))
-        bear-off-active (bear-off-active? game)
         highest-available-move (first (rseq (vec (sort available-moves))))
         highest-occupied-point (first (sort (if (= active-player :p1)
                                               compare'
-                                              compare) (keys occupied-points)))]
+                                              compare) occupied-points))]
     (boolean
      (some
-      (fn [move1]
-        (let [move-by1 (if (= active-player :p1) (* -1 move1) move1)]
+      (fn [move]
+        (let [move-by (* move (db/move-direction active-player))]
           (some
            (fn [occupied-point]
-             (let [target-point (+ occupied-point move-by1)]
+             (let [target-point (+ occupied-point move-by)]
                (or
                 (and (available-points target-point)
-                     (let [existing-checkers (point->checkers target-point)
-                           game (assoc game :selected-point occupied-point)
-                           next-game (cond
-                                       (or
-                                        (not (seq existing-checkers))
-                                        (= active-player (first existing-checkers)))
-                                       (-> game
-                                           (update-in [:point->checkers target-point] conjv active-player)
-                                           pop-selected-point
-                                           (dissoc :selected-point)
-                                           (use-move* move1))
-
-                                       (= 1 (count existing-checkers))
-                                       (-> game
-                                           (assoc-in [:point->checkers target-point] [active-player])
-                                           pop-selected-point
-                                           (dissoc :selected-point)
-                                           (update-in [:bar opponent-player] conjv opponent-player)
-                                           (use-move* move1)))]
-                       (has-valid-move? next-game)))
-                (and bear-off-active
-                     (let [legal-move (legal-move? game move1)
-                           game (assoc game :selected-point occupied-point)]
-                       (if legal-move
-                         (let [move-by (cond-> (- occupied-point (case active-player
-                                                                   :p1 0
-                                                                   :p2 25))
-                                         (= active-player :p2) (* -1))]
+                     (-> (make-move game move occupied-point target-point)
+                         has-valid-move?))
+                (and (bear-off-active? game)
+                     (let [game (assoc game :selected-point occupied-point)]
+                       (if (legal-move? game move)
+                         (let [move-by (* (- (db/bear-off-point active-player) occupied-point)
+                                          (db/move-direction active-player))]
                            (if (not (== -1 (.indexOf available-moves move-by)))
                              (let [next-game (-> game
                                                  (update-in [:bear-off active-player] conjv active-player)
-                                                 pop-selected-point
+                                                 db/pop-selected-point
                                                  (dissoc :selected-point)
                                                  (use-move* move-by))]
                                (has-valid-move? next-game))
                              false))
                          (if (and (= highest-occupied-point occupied-point)
-                                  (case active-player
-                                    :p1 (< target-point 0)
-                                    :p2 (< 25 target-point)))
+                                  (not (<= 0 target-point 25)))
                            (let [next-game (-> game
                                                (update-in [:bear-off active-player] conjv active-player)
-                                               pop-selected-point
+                                               db/pop-selected-point
                                                (dissoc :selected-point)
                                                (use-move* highest-available-move))]
                              (has-valid-move? next-game))
                            false)))))))
-           (keys occupied-points))))
+           occupied-points)))
       available-moves))))
 
-(defn game-end? [game]
-  (let [{:keys [bar point->checkers]} game]
-    (< (count (set/union
-               (into
-                #{}
-                (mapcat val)
-                bar)
-               (into
-                #{}
-                (mapcat val)
-                point->checkers)))
-       2)))
-
 (defn- next-turn [game]
-  (if (or (game-end? game) (has-valid-move? game))
+  (if (or (db/game-end? game) (has-valid-move? game))
     game
     (recur (-> game
-               roll
+               db/roll
                (update :active-player opponent)))))
 
 (defn- maybe-switch-players [game]
@@ -262,10 +223,10 @@
       maybe-switch-players))
 
 (defn- first-roll [game]
-  (loop [game (roll game)]
+  (loop [game (db/roll game)]
     (let [[roll1 roll2] (:rolls game)]
       (if (== roll1 roll2)
-        (recur (roll game))
+        (recur (db/roll game))
         (assoc game :active-player (if (< roll1 roll2) :p2 :p1))))))
 
 (defn- reset-game [db]
@@ -302,31 +263,10 @@
    (reset-game db)))
 
 (defn- move* [game point]
-  (let [{:keys [selected-point active-player point->checkers available-moves]} game
-        existing-checkers (point->checkers point)
-        opponent-player (opponent active-player)
-        move-by (cond-> (- selected-point point)
-                  (= active-player :p2) (* -1))]
+  (let [{:keys [selected-point active-player available-moves]} game
+        move-by (* (- point selected-point) (db/move-direction active-player))]
     (if (not (== -1 (.indexOf available-moves move-by)))
-      (cond
-        (or
-         (not (seq existing-checkers))
-         (= active-player (first existing-checkers)))
-        (-> game
-            (update-in [:point->checkers point] conjv active-player)
-            pop-selected-point
-            (dissoc :selected-point)
-            (use-move* move-by))
-
-        (= 1 (count existing-checkers))
-        (-> game
-            (assoc-in [:point->checkers point] [active-player])
-            pop-selected-point
-            (dissoc :selected-point)
-            (update-in [:bar opponent-player] conjv opponent-player)
-            (use-move* move-by))
-
-        :else game)
+      (make-move game move-by selected-point point)
       game)))
 
 (defn- move [game point]
@@ -372,39 +312,35 @@
    (let [game (:game db)
          {:keys [selected-point active-player available-moves]} game
          highest-available-move (first (rseq (vec (sort available-moves))))
-         target-point (+ selected-point (cond-> highest-available-move
-                                          (= active-player :p1) (* -1)))
+         target-point (+ selected-point (* highest-available-move (db/move-direction active-player)))
          occupied-points (occupied-points game)
          highest-occupied-point (first (sort (if (= active-player :p1)
                                                compare'
-                                               compare) (keys occupied-points)))
+                                               compare) occupied-points))
          legal-move (some (partial legal-move? game) available-moves)]
      (if (bear-off-active? game)
        (if legal-move
-         (let [move-by (cond-> (- selected-point (case active-player
-                                                   :p1 0
-                                                   :p2 25))
-                         (= active-player :p2) (* -1))]
+         (let [move-by (* (- (db/bear-off-point active-player)
+                             selected-point)
+                          (db/move-direction active-player))]
            (if (not (== -1 (.indexOf available-moves move-by)))
              (assoc
               db
               :game
               (-> game
                   (update-in [:bear-off active-player] conjv active-player)
-                  pop-selected-point
+                  db/pop-selected-point
                   (dissoc :selected-point)
                   (use-move move-by)))
              db))
          (if (and (= highest-occupied-point selected-point)
-                  (case active-player
-                    :p1 (< target-point 0)
-                    :p2 (< 25 target-point)))
+                  (not (<= 0 target-point 25)))
            (assoc
             db
             :game
             (-> game
                 (update-in [:bear-off active-player] conjv active-player)
-                pop-selected-point
+                db/pop-selected-point
                 (dissoc :selected-point)
                 (use-move highest-available-move)))
            db))

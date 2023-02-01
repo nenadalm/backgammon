@@ -103,7 +103,7 @@
    [:div.game-box
     [status-bar]
     [:div.game
-     [:div.game-line
+     [:div.game-line.game-line1
       (for [n (range 13 19)]
         ^{:key n} [point {:direction :down
                           :point n}])
@@ -116,7 +116,7 @@
       [:button.menu-button
        {:on-click (fn [_] (re-frame/dispatch [::events/open-page :menu]))}
        "M\ne\nn\nu"]]
-     [:div.game-line
+     [:div.game-line.game-line2
       (for [n (reverse (range 7 13))]
         ^{:key n} [point {:direction :up
                           :point n}])
