@@ -20,8 +20,7 @@ jobs:
             ${{ runner.os }}-maven-
       - run: clojure -M:cljfmt check
       - run: clojure -M:clj-kondo
-      - run: clojure -M -m figwheel.main -t nodejs -c app.run-tests
-      - run: node target/node/main.js
+      - run: yarn test
   deploy:
     needs: test
     if: github.ref == 'refs/heads/master'
