@@ -20,6 +20,7 @@ jobs:
             ${{ runner.os }}-maven-
       - run: clojure -M:cljfmt check
       - run: clojure -M:clj-kondo
+      - run: yarn install
       - run: yarn test
   deploy:
     needs: test
