@@ -1,7 +1,10 @@
 .DEFAULT_GOAL := all
 
-resources/public/js/app.js:
-	clojure -M -m figwheel.main -bo min
+node_modules: yarn.lock
+	yarn install
+
+resources/public/js/app.js: node_modules
+	yarn release
 
 resources/public/manifest.json:
 	clojure -M -m build.create-manifest > $@
@@ -20,8 +23,7 @@ clean:
 all: resources/public/worker.js
 
 .PHONY: test
-test:
+test: node_modules
 	clojure -M:cljfmt check
 	clojure -M:clj-kondo
-	clojure -M -m figwheel.main -t nodejs -c app.run-tests
-	node target/node/main.js
+	yarn test

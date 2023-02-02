@@ -1,0 +1,16 @@
+{:deps true
+
+ :dev-http {9501 "resources/public"}
+
+ :builds
+ {:app {:modules {:app {:entries [app.core]}}
+        :output-dir "resources/public/js"
+        :asset-path "/js/compiled/app"
+        :compiler-options {:source-map true}
+        :dev {:closure-defines {"re_frame.trace.trace_enabled_QMARK_" true}}
+        :devtools {:preloads [day8.re-frame-10x.preload]}
+        :target :browser}
+  :test {:target :node-test
+         :output-to "target/node-test.js"
+         :ns-regexp "-test$"
+         :devtools {:preloads [pjstadig.humane-test-output]}}}}

@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "release": "shadow-cljs release app",
+    "watch": "shadow-cljs watch app",
+    "test": "shadow-cljs compile test && node ./target/node-test.js",
+    "test:watch": "shadow-cljs --config-merge '{:autorun true}' watch test"
+  },
+  "devDependencies": {
+    "shadow-cljs": "^2.20.20"
+  },
+  "dependencies": {
+    "highlight.js": "11.5.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
