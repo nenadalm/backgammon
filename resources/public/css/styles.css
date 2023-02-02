@@ -119,6 +119,10 @@ body {
 .point--selected .point-img {
     stroke: lime;
 }
+.game-line1 .point--selected .checker:last-child,
+.game-line2 .point--selected .checker:first-child {
+    opacity: 0.7;
+}
 
 .point-img {
     fill: red;
