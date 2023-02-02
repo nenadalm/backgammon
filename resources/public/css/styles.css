@@ -132,7 +132,7 @@ body {
 }
 
 .point--selected .point-img {
-    stroke: lime;
+    filter: drop-shadow(0 0 6px lime);
 }
 .game-line1 .point--selected .checker:last-child,
 .game-line2 .point--selected .checker:first-child {
