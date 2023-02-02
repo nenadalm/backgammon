@@ -36,6 +36,7 @@ body {
 }
 
 .tray {
+    position: relative;
     width: 3rem;
     flex-shrink: 0;
     background-color: silver;
@@ -57,6 +58,19 @@ body {
 
 .tray-checkers-up {
     justify-content: flex-end;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.tray-checkers-down {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 50%;
+    left: 0;
 }
 
 .tray-label {
@@ -89,6 +103,7 @@ body {
 }
 
 .bar {
+    position: relative;
     background-color: grey;
     height: 100%;
     width: 2rem;
@@ -146,8 +161,12 @@ body {
 }
 
 .bar-checkers {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
     display: flex;
-    height: 100%;
     flex-direction: column;
     align-items: center;
 }
