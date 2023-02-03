@@ -13,6 +13,12 @@ body {
     user-select: none;
 }
 
+.form-label {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    display: block;
+}
+
 .table {
     width: 100%;
     height: 100%;
@@ -200,6 +206,10 @@ body {
     top: calc(50% - 1rem);
 }
 
+.rolls--inactive {
+    opacity: 0.4;
+}
+
 .winner {
     font-size: 2rem;
     display: flex;
@@ -270,7 +280,6 @@ a {
 .menu--header {
     display: flex;
     justify-content: flex-end;
-    margin-bottom: 2rem;
 }
 
 .menu--footer {
