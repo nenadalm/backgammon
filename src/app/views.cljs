@@ -7,6 +7,15 @@
    [app.subs :as subs]
    [app.components.icons.views :as i]))
 
+(defn- form-data [form-el]
+  (into {}
+        (map (fn [[k v]]
+               [(keyword k) v]))
+        (.entries (js/FormData. form-el))))
+
+(defn- parse-bool [s]
+  (boolean s))
+
 (defn- point-up-img []
   [:svg.point-img
    {:style {:width "100%" :height "100%"}
@@ -41,14 +50,19 @@
 (defn die [x]
   [:div.die x])
 
-(defn dice []
-  (let [[roll1 roll2] @(re-frame/subscribe [::subs/rolls])
-        active-player @(re-frame/subscribe [::subs/active-player])
-        style (if (= :p1 active-player) {:right "25%"} {:left "25%" :transform "rotate(180deg)"})]
+(defn dice-rolls [player [roll1 roll2]]
+  (let [active-player @(re-frame/subscribe [::subs/active-player])
+        style (if (= :p1 player) {:right "25%"} {:left "25%" :transform "rotate(180deg)"})]
     [:div.rolls
-     {:style style}
+     {:style style
+      :class (str "rolls--" (if (= active-player player) "active" "inactive"))}
      [die roll1]
      [die roll2]]))
+
+(defn dice []
+  [:<>
+   (for [[player rolls] @(re-frame/subscribe [::subs/rolls])]
+     ^{:key (name player)} [dice-rolls player rolls])])
 
 (defn winner []
   (when-let [winner @(re-frame/subscribe [::subs/winner])]
@@ -130,12 +144,27 @@
     [tray]]])
 
 (defn menu []
-  (let [app-info @(re-frame/subscribe [::subs/app-info])]
+  (let [settings @(re-frame/subscribe [::subs/settings])
+        app-info @(re-frame/subscribe [::subs/app-info])]
     [:div.menu
      [:div.menu--header
       [:button.close
        {:on-click (fn [_] (re-frame/dispatch [::events/open-page :game]))}
        [i/close]]]
+     [:form
+      {:on-submit (fn [e]
+                    (.preventDefault e)
+                    (re-frame/dispatch
+                     [::events/save-settings
+                      (-> (form-data (.-currentTarget e))
+                          (update :show-prev-roll parse-bool))]))}
+      [:label.form-label
+       [:input
+        {:type "checkbox"
+         :name "show-prev-roll"
+         :default-checked (:show-prev-roll settings)}]
+       "Show prev roll"]
+      [:button.action "Save & reset game"]]
      [:button.action
       {:on-click (fn [_] (re-frame/dispatch [::events/reset]))}
       "Reset game"]

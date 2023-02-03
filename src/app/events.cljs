@@ -16,10 +16,6 @@
                       (.getAttribute "content"))
               "unknown"))))
 
-(def ^:private opponent
-  {:p1 :p2
-   :p2 :p1})
-
 (defn- entering-selected-point [game]
   (let [{:keys [active-player bar]} game
         hitted (get bar active-player)]
@@ -29,7 +25,7 @@
 
 (defn- blocked-points [game]
   (let [{:keys [point->checkers active-player]} game
-        opponent (opponent active-player)]
+        opponent (db/opponent active-player)]
     (into
      #{}
      (comp
@@ -134,7 +130,7 @@
 
 (defn- make-move [game move occupied-point target-point]
   (let [{:keys [point->checkers active-player]} game
-        opponent-player (opponent active-player)
+        opponent-player (db/opponent active-player)
         existing-checkers (point->checkers target-point)
         game (assoc game :selected-point occupied-point)]
     (cond
@@ -210,7 +206,7 @@
     game
     (recur (-> game
                db/roll
-               (update :active-player opponent)))))
+               (update :active-player db/opponent)))))
 
 (defn- maybe-switch-players [game]
   (-> game
@@ -251,16 +247,27 @@
                    first-roll)
          :page :game))
 
+(def ^:private default-settings
+  {:show-prev-roll false})
+
 (re-frame/reg-event-fx
  ::init
  [(re-frame/inject-cofx :app-version)]
  (fn [{:keys [app-version]} _]
-   {:db (reset-game {:app-info {:version app-version}})}))
+   {:db (reset-game {:settings default-settings
+                     :app-info {:version app-version}})}))
 
 (re-frame/reg-event-db
  ::reset
  (fn [db _]
    (reset-game db)))
+
+(re-frame/reg-event-db
+ ::save-settings
+ (fn [db [_ settings]]
+   (-> db
+       (update :settings merge settings)
+       reset-game)))
 
 (defn- move* [game point]
   (let [{:keys [selected-point active-player available-moves]} game

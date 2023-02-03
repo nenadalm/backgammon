@@ -12,7 +12,12 @@
 (re-frame/reg-sub
  ::rolls
  (fn [db _]
-   (get-in db [:game :rolls] [])))
+   (let [game (:game db)
+         active-player (:active-player game)
+         opponent-player (db/opponent active-player)
+         prev-rolls (:prev-rolls game)]
+     (cond-> [[active-player (:rolls game)]]
+       prev-rolls (conj [opponent-player prev-rolls])))))
 
 (re-frame/reg-sub
  ::active-player
@@ -51,3 +56,8 @@
  ::winner
  (fn [db _]
    (db/winner (:game db))))
+
+(re-frame/reg-sub
+ ::settings
+ (fn [db _]
+   (:settings db)))

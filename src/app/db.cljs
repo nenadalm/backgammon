@@ -2,6 +2,10 @@
 
 (def ^:private checkers-per-player 15)
 
+(def opponent
+  {:p1 :p2
+   :p2 :p1})
+
 (defn winner [game]
   (let [{:keys [bear-off]} game]
     (cond
@@ -27,13 +31,15 @@
 
 (defn roll [game]
   (let [roll1 (roll-die)
-        roll2 (roll-die)]
-    (assoc game
-           :used-moves []
-           :rolls [roll1 roll2]
-           :available-moves (if (== roll1 roll2)
-                              [roll1 roll2 roll1 roll2]
-                              [roll1 roll2]))))
+        roll2 (roll-die)
+        prev-rolls (:rolls game)]
+    (cond-> (assoc game
+                   :used-moves []
+                   :rolls [roll1 roll2]
+                   :available-moves (if (== roll1 roll2)
+                                      [roll1 roll2 roll1 roll2]
+                                      [roll1 roll2]))
+      prev-rolls (assoc :prev-rolls prev-rolls))))
 
 (defn move-direction [player]
   (if (= player :p1) -1 1))
