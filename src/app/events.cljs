@@ -219,11 +219,11 @@
       maybe-switch-players))
 
 (defn- first-roll [game]
-  (loop [game (db/roll game)]
-    (let [[roll1 roll2] (:rolls game)]
+  (loop [next-game (db/roll game)]
+    (let [[roll1 roll2] (:rolls next-game)]
       (if (== roll1 roll2)
         (recur (db/roll game))
-        (assoc game :active-player (if (< roll1 roll2) :p2 :p1))))))
+        (assoc next-game :active-player (if (< roll1 roll2) :p2 :p1))))))
 
 (defn- reset-game [db]
   (assoc db

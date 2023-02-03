@@ -15,9 +15,10 @@
    (let [game (:game db)
          active-player (:active-player game)
          opponent-player (db/opponent active-player)
-         prev-rolls (:prev-rolls game)]
+         prev-rolls (:prev-rolls game)
+         show-prev-roll (get-in db [:settings :show-prev-roll])]
      (cond-> [[active-player (:rolls game)]]
-       prev-rolls (conj [opponent-player prev-rolls])))))
+       (and prev-rolls show-prev-roll) (conj [opponent-player prev-rolls])))))
 
 (re-frame/reg-sub
  ::active-player
