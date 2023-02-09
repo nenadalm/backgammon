@@ -1,5 +1,6 @@
 (ns app.events
   (:require
+   [clojure.edn :as edn]
    [clojure.set :as set]
    [re-frame.core :as re-frame]
    [app.db :as db]))
@@ -15,6 +16,21 @@
                       js/document.querySelector
                       (.getAttribute "content"))
               "unknown"))))
+
+(re-frame/reg-cofx
+ :settings
+ (fn [coeffects _]
+   (assoc coeffects
+          :settings
+          (or
+           (edn/read-string
+            (js/window.localStorage.getItem "nenadalm.backgammon/settings"))
+           {}))))
+
+(re-frame/reg-fx
+ :settings
+ (fn [settings]
+   (js/window.localStorage.setItem "nenadalm.backgammon/settings" (pr-str settings))))
 
 (defn- entering-selected-point [game]
   (let [{:keys [active-player bar]} game
@@ -252,9 +268,10 @@
 
 (re-frame/reg-event-fx
  ::init
- [(re-frame/inject-cofx :app-version)]
- (fn [{:keys [app-version]} _]
-   {:db (reset-game {:settings default-settings
+ [(re-frame/inject-cofx :app-version)
+  (re-frame/inject-cofx :settings)]
+ (fn [{:keys [app-version settings]} _]
+   {:db (reset-game {:settings (merge default-settings settings)
                      :app-info {:version app-version}})}))
 
 (re-frame/reg-event-db
@@ -262,12 +279,13 @@
  (fn [db _]
    (reset-game db)))
 
-(re-frame/reg-event-db
+(re-frame/reg-event-fx
  ::save-settings
- (fn [db [_ settings]]
-   (-> db
-       (update :settings merge settings)
-       reset-game)))
+ (fn [{:keys [db]} [_ settings]]
+   {:db (-> db
+            (update :settings merge settings)
+            reset-game)
+    :settings settings}))
 
 (defn- move* [game point]
   (let [{:keys [selected-point active-player available-moves]} game
