@@ -264,7 +264,7 @@
          :page :game))
 
 (def ^:private default-settings
-  {:show-prev-roll false})
+  {:show-prev-roll true})
 
 (re-frame/reg-event-fx
  ::init
