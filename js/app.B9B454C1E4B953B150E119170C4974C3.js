@@ -881,4 +881,4 @@ null)],null),new Y(null,2,5,Z,[wj,["Version: ",A.g(Jj.g(b))].join("")],null)],nu
 function ms(){var a=navigator;a=null==a?null:a.serviceWorker;null==a||a.register("worker.js");ls();a=new Y(null,1,5,Z,[dl],null);up(a);Ip(Jp,a);a=G(B(vp));for(var b=null,c=0,d=0;;)if(d<c){var e=b.M(null,d);T(e,0,null);e=T(e,1,null);Wn(e);d+=1}else if(a=G(a))Md(a)?(c=nc(a),a=oc(a),b=c,c=O(c)):(b=I(a),T(b,0,null),b=T(b,1,null),Wn(b),a=K(a),b=null,c=0),d=0;else break;w(Pe(B(vp)))&&gp.l(el,S(["re-frame: The subscription cache isn't empty after being cleared"]));a=new Y(null,1,5,Z,[ks],null);b=document.getElementById("app");
 return fq(a,b)}var ns=["app","core","init"],os=aa;ns[0]in os||"undefined"==typeof os.execScript||os.execScript("var "+ns[0]);for(var ps;ns.length&&(ps=ns.shift());)ns.length||void 0===ms?os=os[ps]&&os[ps]!==Object.prototype[ps]?os[ps]:os[ps]={}:os[ps]=ms;
 }).call(this);
-//# sourceMappingURL=app.js.map
+//# sourceMappingURL=app.B9B454C1E4B953B150E119170C4974C3.js.map
