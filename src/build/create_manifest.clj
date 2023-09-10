@@ -20,7 +20,8 @@
     :background_color "#121212"
     :theme_color "#121212"
     :display "fullscreen"
-    :start_url "index.html"}))
+    :start_url "index.html"
+    :orientation "landscape-primary"}))
 
 (defn -main [& _]
   (println (render)))
