@@ -270,9 +270,12 @@
  ::init
  [(re-frame/inject-cofx :app-version)
   (re-frame/inject-cofx :settings)]
- (fn [{:keys [app-version settings]} _]
-   {:db (reset-game {:settings (merge default-settings settings)
-                     :app-info {:version app-version}})}))
+ (fn [{:keys [app-version settings db]} _]
+   (let [data {:settings (merge default-settings settings)
+               :app-info {:version app-version}}]
+     {:db (if (seq db)
+            (merge db data)
+            (reset-game data))})))
 
 (re-frame/reg-event-db
  ::reset

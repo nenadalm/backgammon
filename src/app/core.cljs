@@ -4,7 +4,8 @@
    [reagent.dom :as reagent-dom]
    [app.config :as config]
    [app.views :as views]
-   [app.events :as events]))
+   [app.events :as events]
+   [app.autosave :as autosave]))
 
 (defn mount-root []
   (re-frame/clear-subscription-cache!)
@@ -42,6 +43,7 @@
   (dev-setup)
   (prod-setup)
   (prevent-screen-lock)
+  (autosave/init "nenadalm.backgammon/autosave")
   (re-frame/dispatch-sync [::events/init])
   (mount-root))
 
