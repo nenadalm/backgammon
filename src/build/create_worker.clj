@@ -12,10 +12,14 @@
    (u/asset "css/styles.css" module-id->output-name)])
 
 (defn render [module-id->output-name]
-  (str/replace
-   (slurp "./resources/private/worker.js")
-   #".*prop:urlsToCache.*"
-   (str
-    "const urlsToCache = ["
-    (str/join "," (mapv #(str "\"" % "\"") (urls-to-cache module-id->output-name)))
-    "];")))
+  (-> (slurp "./resources/private/worker.js")
+      (str/replace
+       #".*prop:urlsToCache.*"
+       (str
+        "const urlsToCache = ["
+        (str/join "," (mapv #(str "\"" % "\"") (urls-to-cache module-id->output-name)))
+        "];"))
+      (str/replace
+       #".*prop:relatedAppVersion.*"
+       (str
+        "const relatedAppVersion = \"" (u/app-version) "\";"))))
