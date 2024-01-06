@@ -4,8 +4,7 @@
    [build.util :as u]))
 
 (defn- urls-to-cache [module-id->output-name]
-  [""
-   "index.html"
+  ["index.html"
    "manifest.json"
    "img/icon.svg"
    (u/asset "js/app.js" module-id->output-name)
