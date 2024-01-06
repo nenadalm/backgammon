@@ -19,7 +19,7 @@
 (defn- sha-1 [s]
   (let [c (java.security.MessageDigest/getInstance "sha-1")]
     (.update c (.getBytes s "utf-8"))
-    (.encodeHex (at.favre.lib.bytes.Bytes/wrap (.digest c)))))
+    (reduce (fn [s b] (str s (format "%02x" b))) "" (.digest c))))
 
 (defn- file-hash [f]
   (-> f
