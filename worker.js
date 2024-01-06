@@ -9,4 +9,3 @@ self.addEventListener('fetch', event => {
                       .then(cache => cache.match(event.request))
                       .then(response => response ?? fetch(event.request)));
 });
-
