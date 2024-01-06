@@ -5,7 +5,7 @@
     "test": "shadow-cljs compile test && node ./target/node-test.js",
     "test:all": "clojure -M:cljfmt check && clojure -M:clj-kondo && yarn test",
     "test:watch": "shadow-cljs --config-merge '{:autorun true}' watch test",
-    "clean": "rm -rf resources/public/js resources/public/index.html resources/public/worker.js resources/public/manifest.json"
+    "clean": "rm -rf resources/public/js resources/public/css resources/public/index.html resources/public/worker.js resources/public/manifest.json"
   },
   "devDependencies": {
     "shadow-cljs": "^2.20.20"
