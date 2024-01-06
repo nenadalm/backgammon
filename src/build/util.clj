@@ -3,17 +3,9 @@
    [clojure.java.io :as io]
    [clojure.edn]))
 
-(def ^:private module-id->output-name (atom nil))
-
-(defn- output-name [module-id]
-  (when module-id
-    (when-not @module-id->output-name
-      (reset!
-       module-id->output-name
-       (into {}
-             (map (juxt :module-id :output-name))
-             (clojure.edn/read-string (slurp (io/resource "public/js/manifest.edn"))))))
-    (when-let [s (@module-id->output-name module-id)]
+(defn- output-name [module-name module-id->output-name]
+  (when module-name
+    (when-let [s (module-id->output-name module-name)]
       (str "js/" s))))
 
 (defn- sha-1 [s]
@@ -31,13 +23,12 @@
     (file-hash url)
     (throw (ex-info "Asset not found." {:path path}))))
 
-(defn- module-id [path]
-  (-> (re-matches #"^js/(.+)\.js" path)
-      second
-      keyword))
+(defn- module-name [path]
+  (-> (re-matches #"^js/(.+\.js)" path)
+      second))
 
-(defn asset [path]
+(defn asset [path module-id->output-name]
   (or
-   (-> (module-id path)
-       output-name)
+   (-> (module-name path)
+       (output-name module-id->output-name))
    (str path "?v=" (asset-hash path))))

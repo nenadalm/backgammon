@@ -3,17 +3,17 @@
    [jsonista.core :as j]
    [build.util :as u]))
 
-(defn render []
+(defn render [module-id->output-name]
   (j/write-value-as-string
    {:name "Backgammon"
-    :icons [{:src (u/asset "img/icon.svg")
+    :icons [{:src (u/asset "img/icon.svg" module-id->output-name)
              :sizes "any"
              :type "image/svg+xml"}
-            {:src (u/asset "img/icon.svg")
+            {:src (u/asset "img/icon.svg" module-id->output-name)
              :sizes "any"
              :type "image/svg+xml"
              :purpose "maskable"}
-            {:src (u/asset "img/icon_512.png")
+            {:src (u/asset "img/icon_512.png" module-id->output-name)
              :sizes "512x512"
              :type "image/png"
              :purpose "maskable"}]
@@ -22,6 +22,3 @@
     :display "fullscreen"
     :start_url "index.html"
     :orientation "landscape-primary"}))
-
-(defn -main [& _]
-  (println (render)))
