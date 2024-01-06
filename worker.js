@@ -1,5 +1,5 @@
-const relatedAppVersion = "e53a2d422d87a5b6b046ba818f7c604fd23aefcd";
-const urlsToCache = ["","index.html","manifest.json","img/icon.svg","js/app.57C0EE03D68039FF5C3BFCDD552374FC.js","css/styles.db66a53c8904774df80ed2dacb765b8191c11396.css"];
+const relatedAppVersion = "7ab606b742aa7571ac2abcade21557fbbae64cd9";
+const urlsToCache = ["index.html","manifest.json","img/icon.svg","js/app.57C0EE03D68039FF5C3BFCDD552374FC.js","css/styles.db66a53c8904774df80ed2dacb765b8191c11396.css"];
 
 const cacheKey = `resources.${relatedAppVersion}`;
 
