@@ -44,7 +44,8 @@ jobs:
       - name: Build artifacts
         run: |
           clojure -Stree
-          make
+          yarn install
+          yarn release
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4.4.3
         with:

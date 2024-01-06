@@ -11,7 +11,7 @@
    (u/asset "js/app.js")
    (u/asset "css/styles.css")])
 
-(defn- render []
+(defn render []
   (str/replace
    (slurp "./resources/private/worker.js")
    #".*prop:urlsToCache.*"

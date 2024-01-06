@@ -13,7 +13,7 @@
 (defn- app-version []
   (sh "git" "rev-parse" "HEAD"))
 
-(defn- render []
+(defn render []
   (str
    "<!doctype html>
 <html lang=\"en-US\">

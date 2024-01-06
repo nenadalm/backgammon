@@ -3,7 +3,7 @@
    [jsonista.core :as j]
    [build.util :as u]))
 
-(defn- render []
+(defn render []
   (j/write-value-as-string
    {:name "Backgammon"
     :icons [{:src (u/asset "img/icon.svg")

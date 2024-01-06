@@ -10,6 +10,7 @@
         :dev {:closure-defines {"re_frame.trace.trace_enabled_QMARK_" true}}
         :release {:module-hash-names true}
         :devtools {:preloads [day8.re-frame-10x.preload]}
+        :build-hooks [(build.hook/hook)]
         :target :browser}
   :test {:target :node-test
          :output-to "target/node-test.js"
