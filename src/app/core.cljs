@@ -5,7 +5,8 @@
    [app.config :as config]
    [app.views :as views]
    [app.events :as events]
-   [app.autosave :as autosave]))
+   [nenadalm.clojure-utils.re-frame.autosave :as autosave]
+   [nenadalm.clojure-utils.cljs :as cljs-utils]))
 
 (defn mount-root []
   (re-frame/clear-subscription-cache!)
@@ -25,24 +26,10 @@
   (when-not config/debug?
     (register-worker)))
 
-(defn- prevent-screen-lock []
-  (when-some [wake-lock (.-wakeLock js/navigator)]
-    (-> wake-lock
-        (.request "screen")
-        (.then (fn []
-                 (js/document.addEventListener
-                  "visibilitychange"
-                  (fn [_]
-                    (when (= "visible" (.-visibilityState js/document))
-                      (-> wake-lock
-                          (.request "screen")
-                          (.catch (fn [_] (js/alert "Cannot prevent screen from locking.")))))))))
-        (.catch (fn [_] (js/alert "Cannot prevent screen from locking."))))))
-
 (defn ^:export init []
   (dev-setup)
   (prod-setup)
-  (prevent-screen-lock)
+  (cljs-utils/prevent-screen-lock)
   (autosave/init "nenadalm.backgammon/autosave")
   (re-frame/dispatch-sync [::events/init])
   (mount-root))

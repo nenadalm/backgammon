@@ -1,7 +1,16 @@
-(ns build.assets
+(ns nenadalm.clojure-utils.assets
   (:require
-   [clojure.java.io :as io]
-   [build.util :as u]))
+   [clojure.java.io :as io]))
+
+(defn- sha-1 [s]
+  (let [c (java.security.MessageDigest/getInstance "sha-1")]
+    (.update c (.getBytes s "utf-8"))
+    (reduce (fn [s b] (str s (format "%02x" b))) "" (.digest c))))
+
+(defn- file-hash [f]
+  (-> f
+      slurp
+      sha-1))
 
 (defn- path [s]
   (java.nio.file.Paths/get s (make-array java.lang.String 0)))
@@ -49,7 +58,7 @@
 (defn- hash-assets [{:keys [public-dir assets]}]
   (reduce
    (fn [acc [asset src]]
-     (let [hash (u/file-hash src)
+     (let [hash (file-hash src)
            asset-path (hashed-asset asset hash)
            target (str public-dir "/" asset-path)]
        (copy src target)

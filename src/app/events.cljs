@@ -3,19 +3,15 @@
    [clojure.edn :as edn]
    [clojure.set :as set]
    [re-frame.core :as re-frame]
-   [app.db :as db]))
+   [app.db :as db]
+   [nenadalm.clojure-utils.cljs :as cljs-utils]))
 
 (def ^:private conjv (fnil conj []))
 
 (re-frame/reg-cofx
  :app-version
  (fn [coeffects _]
-   (assoc coeffects
-          :app-version
-          (or (some-> "meta[name=app-version]"
-                      js/document.querySelector
-                      (.getAttribute "content"))
-              "unknown"))))
+   (assoc coeffects :app-version (cljs-utils/app-version))))
 
 (re-frame/reg-cofx
  :settings

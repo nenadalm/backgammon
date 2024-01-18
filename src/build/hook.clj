@@ -4,7 +4,7 @@
    [build.create-manifest]
    [build.create-index]
    [build.create-worker]
-   [build.assets :as assets]))
+   [nenadalm.clojure-utils.assets :as assets]))
 
 (defn hook
   {:shadow.build/stage :flush}
