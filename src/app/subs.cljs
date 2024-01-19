@@ -62,3 +62,9 @@
  ::settings
  (fn [db _]
    (:settings db)))
+
+(re-frame/reg-sub
+ ::messages
+ (fn [db _]
+   (cond-> []
+     (get-in db [:app-info :update-available]) (conj {:text "New version is available."}))))

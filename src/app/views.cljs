@@ -145,12 +145,18 @@
 
 (defn menu []
   (let [settings @(re-frame/subscribe [::subs/settings])
-        app-info @(re-frame/subscribe [::subs/app-info])]
+        app-info @(re-frame/subscribe [::subs/app-info])
+        messages @(re-frame/subscribe [::subs/messages])]
     [:div.menu
      [:div.menu--header
       [:button.close
        {:on-click (fn [_] (re-frame/dispatch [::events/open-page :game]))}
        [i/close]]]
+     (when (seq messages)
+       [:div.messages
+        (for [message messages]
+          ^{:key (:text message)} [:div.message (:text message)])
+        [:hr]])
      [:form
       {:on-submit (fn [e]
                     (.preventDefault e)

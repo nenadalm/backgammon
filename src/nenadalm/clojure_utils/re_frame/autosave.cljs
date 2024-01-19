@@ -24,7 +24,7 @@
         ::ls/remove [autosave-key]}
        {})))
 
-  (re-frame/dispatch [::autosave-load])
+  (re-frame/dispatch-sync [::autosave-load])
   (js/document.addEventListener
    "visibilitychange"
    (fn []

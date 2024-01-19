@@ -9,7 +9,7 @@
         :compiler-options {:source-map true}
         :dev {:closure-defines {"re_frame.trace.trace_enabled_QMARK_" true}}
         :release {:module-hash-names true}
-        :devtools {:preloads [day8.re-frame-10x.preload]}
+        :devtools {:preloads [day8.re-frame-10x.preload.react-18]}
         :build-hooks [(build.hook/hook {:public-dir "resources/public"})]
         :target :browser}
   :test {:target :node-test

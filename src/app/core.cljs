@@ -16,7 +16,24 @@
 (defn register-worker []
   (some-> js/navigator
           .-serviceWorker
-          (.register "worker.js")))
+          (.register "worker.js")
+          (.then
+           (fn [registration]
+             (if (and (.-waiting registration)
+                      js/navigator.serviceWorker.controller)
+               (re-frame/dispatch [::events/update-available])
+               (.addEventListener
+                registration
+                "updatefound"
+                (fn []
+                  (when-let [installing (.-installing registration)]
+                    (.addEventListener
+                     installing
+                     "statechange"
+                     (fn []
+                       (when (and (.-waiting registration)
+                                  js/navigator.serviceWorker.controller)
+                         (re-frame/dispatch [::events/update-available]))))))))))))
 
 (defn- dev-setup []
   (when config/debug?

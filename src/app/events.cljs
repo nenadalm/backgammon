@@ -273,6 +273,11 @@
             (merge db data)
             (reset-game data))})))
 
+(re-frame/reg-event-fx
+ ::update-available
+ (fn [{:keys [db]} _]
+   {:db (assoc-in db [:app-info :update-available] true)}))
+
 (re-frame/reg-event-db
  ::reset
  (fn [db _]
