@@ -1,4 +1,4 @@
-const relatedAppVersion = "42fb0db17d6293e67a49dce6cf15c6c9fb1a943f";
+const relatedAppVersion = "63f4d2db718d2b2988948c7a69e65be804d467ce";
 const urlsToCache = ["index.html","manifest.json","img/icon.svg","js/app.B106AEA2E574D823E8BE60CD28A38BD0.js","css/styles.20777c58f12c87737aa63a49d581a34dab629fd1.css"];
 
 const cacheKeyPrefix = 'nenadalm.backgammon.';

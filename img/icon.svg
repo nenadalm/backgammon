@@ -7,11 +7,11 @@
    viewBox="0 0 144 144"
    version="1.1"
    id="svg5"
-   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
    sodipodi:docname="icon.svg"
-   inkscape:export-filename="/home/nenadalm/Programming/backgammon/resources/public/img/icon_512.png"
-   inkscape:export-xdpi="90.311111"
-   inkscape:export-ydpi="90.311111"
+   inkscape:export-filename="icon_192.png"
+   inkscape:export-xdpi="33.866669"
+   inkscape:export-ydpi="33.866669"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -26,15 +26,17 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="0.66368547"
-     inkscape:cx="177.0417"
-     inkscape:cy="265.18586"
+     inkscape:zoom="0.93859299"
+     inkscape:cx="233.86068"
+     inkscape:cy="274.34682"
      inkscape:window-width="1706"
-     inkscape:window-height="905"
+     inkscape:window-height="903"
      inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="layer1" />
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#d1d1d1" />
   <defs
      id="defs2" />
   <g
@@ -42,14 +44,19 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="fill:#ffffff;stroke:#ffffff;stroke-width:4.78888"
+       style="fill:#121212;stroke:#121212;stroke-width:4.78888;stroke-opacity:1;fill-opacity:1"
        id="rect75"
        width="139.21112"
        height="139.21112"
        x="2.3944397"
        y="2.3944397" />
+    <path
+       style="fill:#e9967a;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
+       d="M 20,144 72,0 124,144 Z"
+       id="path1"
+       sodipodi:nodetypes="cccc" />
     <circle
-       style="fill:#000000;stroke:#ffffff;stroke-width:1.32292"
+       style="fill:#ffff00;stroke:#ffff00;stroke-width:1.32292;fill-opacity:1;stroke-opacity:1"
        id="path219"
        cx="72"
        cy="72"
