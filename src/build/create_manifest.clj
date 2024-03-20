@@ -7,6 +7,7 @@
   (j/write-value-as-string
    {:name "Backgammon"
     :description "Backgammon game with local multiplayer (no single player)."
+    :categories ["games"]
     :icons [{:src (u/asset "img/icon.svg" module-id->output-name)
              :sizes "any"
              :type "image/svg+xml"}
