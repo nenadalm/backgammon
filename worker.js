@@ -1,5 +1,5 @@
-const relatedAppVersion = "95f3a0eef5e9fa643e3d7e4e785a9a6f615702b1";
-const urlsToCache = ["index.html","manifest.json","img/icon.svg","js/app.B106AEA2E574D823E8BE60CD28A38BD0.js","css/styles.20777c58f12c87737aa63a49d581a34dab629fd1.css"];
+const relatedAppVersion = "a4f1c76142b513b619072f5d7b820b87065db211";
+const urlsToCache = ["index.html","manifest.json","img/icon.svg","js/app.1626E2D7053FFF7F8BCF432F64616700.js","css/styles.20777c58f12c87737aa63a49d581a34dab629fd1.css"];
 
 const cacheKeyPrefix = 'nenadalm.backgammon.';
 const cacheKey = `${cacheKeyPrefix}resources.${relatedAppVersion}`;
