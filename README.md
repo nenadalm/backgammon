@@ -4,4 +4,4 @@
 
 Backgammon for 2 players on 1 device.
 
-<img alt="screenshot" height="240" src="docs/backgammon.png">
+<img alt="screenshot" height="240" src="resources/public/img/screenshot_1.png">
