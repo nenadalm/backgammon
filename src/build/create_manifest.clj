@@ -1,12 +1,13 @@
 (ns build.create-manifest
   (:require
    [jsonista.core :as j]
-   [build.util :as u]))
+   [build.util :as u]
+   [build.config :as c]))
 
 (defn render [module-id->output-name]
   (j/write-value-as-string
-   {:name "Backgammon"
-    :description "Backgammon game with local multiplayer (no single player)."
+   {:name c/name
+    :description c/description
     :categories ["games"]
     :icons [{:src (u/asset "img/icon.svg" module-id->output-name)
              :sizes "any"
