@@ -4,15 +4,15 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.1
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-java@v6
         with:
-          distribution: 'adopt'
-          java-version: '11'
+          distribution: 'temurin'
+          java-version: '25'
       - uses: DeLaGuardo/setup-clojure@master
         with:
-          cli: '1.11.1.1435'
-      - uses: actions/cache@v3.3.2
+          cli: '1.12.6.1673'
+      - uses: actions/cache@v6.1.0
         with:
           path: '~/.m2'
           key: "${{ runner.os }}-maven-${{ hashFiles('deps.edn') }}"
@@ -27,15 +27,15 @@ jobs:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.1
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-java@v6
         with:
-          distribution: 'adopt'
-          java-version: '11'
+          distribution: 'temurin'
+          java-version: '25'
       - uses: DeLaGuardo/setup-clojure@master
         with:
-          cli: '1.11.1.1435'
-      - uses: actions/cache@v3.3.2
+          cli: '1.12.6.1673'
+      - uses: actions/cache@v6.1.0
         with:
           path: '~/.m2'
           key: "${{ runner.os }}-maven-${{ hashFiles('deps.edn') }}"
@@ -47,7 +47,7 @@ jobs:
           yarn install
           yarn release
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4.5.0
+        uses: JamesIves/github-pages-deploy-action@v4.9.0
         with:
           branch: gh-pages
           folder: resources/public
