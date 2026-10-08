@@ -1,17 +1,18 @@
 (ns app.core
   (:require
    [re-frame.core :as re-frame]
-   [reagent.dom :as reagent-dom]
+   [reagent.dom.client :as rdomc]
    [app.config :as config]
    [app.views :as views]
    [app.events :as events]
    [nenadalm.clojure-utils.re-frame.autosave :as autosave]
    [nenadalm.clojure-utils.cljs :as cljs-utils]))
 
+(defonce root (rdomc/create-root (.getElementById js/document "app")))
+
 (defn mount-root []
   (re-frame/clear-subscription-cache!)
-  (reagent-dom/render [views/app]
-                      (.getElementById js/document "app")))
+  (rdomc/render root [views/app]))
 
 (defn register-worker []
   (some-> js/navigator

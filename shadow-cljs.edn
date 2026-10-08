@@ -7,9 +7,9 @@
         :output-dir "resources/public/js"
         :asset-path "/js/compiled/app"
         :compiler-options {:source-map true}
-        :dev {:closure-defines {"re_frame.trace.trace_enabled_QMARK_" true}}
+        :dev {:closure-defines {re-frame.trace.trace-enabled? true}}
         :release {:module-hash-names true}
-        :devtools {:preloads [day8.re-frame-10x.preload.react-18]}
+        :devtools {:preloads [day8.re-frame-10x.preload]}
         :build-hooks [(build.hook/hook {:public-dir "resources/public"})]
         :target :browser}
   :test {:target :node-test
